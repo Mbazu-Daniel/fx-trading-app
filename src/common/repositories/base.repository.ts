@@ -20,23 +20,13 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     includeDeleted: boolean = false,
     relations: string[] = [],
   ): Promise<T> {
-    if (!id) {
-      throw new NotFoundException('Invalid Id passed');
-    }
-
     const options: FindOneOptions = {
       where: { id },
       withDeleted: includeDeleted,
       relations,
     };
 
-    const entity = await this.repository.findOne(options);
-
-    if (!entity) {
-      throw new NotFoundException(`Entity with id ${id} not found`);
-    }
-
-    return entity;
+    return this.repository.findOne(options);
   }
 
   async create(data: DeepPartial<T>): Promise<T> {

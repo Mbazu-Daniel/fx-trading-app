@@ -22,8 +22,6 @@ export interface IEnvironment {
   };
 
   MAILER: {
-    HOST: string;
-    PORT: string;
     EMAIL: string;
     USERNAME: string;
     PASSWORD: string;
@@ -50,8 +48,6 @@ export const ENVIRONMENT: IEnvironment = {
     ACCESS_EXPIRES_IN: process.env.ACCESS_EXPIRES_IN,
   },
   MAILER: {
-    HOST: process.env.SMTP_HOST,
-    PORT: process.env.SMTP_PORT,
     EMAIL: process.env.SMTP_EMAIL,
     USERNAME: process.env.SMTP_USERNAME,
     PASSWORD: process.env.SMTP_PASSWORD,

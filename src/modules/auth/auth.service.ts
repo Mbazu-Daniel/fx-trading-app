@@ -1,9 +1,16 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserRole } from 'src/common/enums';
-import { CommonHelper, OtpHelper, PasswordHelper } from 'src/common/helpers';
+import {
+  CommonHelper,
+  DbTransactionHelper,
+  OtpHelper,
+  PasswordHelper,
+} from 'src/common/helpers';
 import { MailService } from 'src/common/mail/mail.service';
+import { CurrencyService } from '../currency/currency.service';
 import { UsersService } from '../users/users.service';
+import { WalletsService } from '../wallets/wallets.service';
 
 @Injectable()
 export class AuthService {
@@ -11,37 +18,60 @@ export class AuthService {
     private readonly userService: UsersService,
     private readonly jwtService: JwtService,
     private readonly mailService: MailService,
+    private readonly currencyService: CurrencyService,
+    private readonly walletService: WalletsService,
   ) {}
 
   async register(email: string, password: string): Promise<boolean> {
-    const normalizedEmail = CommonHelper.trimAndLowerCase(email);
+    return DbTransactionHelper.execute(async () => {
+      const normalizedEmail = CommonHelper.trimAndLowerCase(email);
 
-    const [hashedPassword, emailExist] = await Promise.all([
-      PasswordHelper.hashPassword(password),
-      this.userService.findByEmail(normalizedEmail),
-    ]);
+      const [hashedPassword, emailExist] = await Promise.all([
+        PasswordHelper.hashPassword(password),
+        this.userService.findByEmail(normalizedEmail),
+      ]);
 
-    if (emailExist) {
-      throw new BadRequestException('Email already exists');
-    }
+      if (emailExist) {
+        throw new BadRequestException('Email already exists');
+      }
 
-    const { otpCode, otpExpiresAt } = OtpHelper.generate();
+      const { otpCode, otpExpiresAt } = OtpHelper.generate();
 
-    const newUser = await this.userService.create({
-      email: normalizedEmail,
-      password: hashedPassword,
-      role: UserRole.BASIC,
-      otpCode,
-      otpExpiresAt,
+      const user = await this.userService.create({
+        email: normalizedEmail,
+        password: hashedPassword,
+        role: UserRole.BASIC,
+        otpCode,
+        otpExpiresAt,
+      });
+
+      const [ngn, usd] = await Promise.all([
+        this.currencyService.findByCode('NGN'),
+        this.currencyService.findByCode('USD'),
+      ]);
+
+      if (ngn) {
+        await this.walletService.create(user.id, {
+          currencyId: ngn.id,
+          balance: 0,
+        });
+      }
+
+      if (usd) {
+        await this.walletService.create(user.id, {
+          currencyId: usd.id,
+          balance: 0,
+        });
+      }
+
+      const template = `<p>Welcome! Please verify your account using the OTP ${otpCode} sent to your email. It expires in 10 minutes.</p>`;
+
+      // Send the email after committing the transaction
+      this.mailService.sendEmail(email, 'Verify Account', template);
+
+      return true;
     });
-
-    const template = `<p>Welcome! Please verify your account using the OTP ${otpCode} sent to your email. It expires in 10 minutes.</p>`;
-
-    await this.mailService.sendEmail(email, 'Verify Account', template);
-
-    return !!newUser.email;
   }
-
   async verifyEmail(email: string, otp: string): Promise<boolean> {
     const user = await this.userService.findByEmail(email);
 

@@ -1,6 +1,13 @@
 import { BaseEntity } from 'src/common/database/entities/base.entity';
 import { UserRole } from 'src/common/enums';
-import { Column, DeleteDateColumn, Entity, UpdateDateColumn } from 'typeorm';
+import { Wallet } from 'src/modules/wallets/entities/wallet.entity';
+import {
+  Column,
+  DeleteDateColumn,
+  Entity,
+  OneToMany,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity({ name: 'users' })
 export class User extends BaseEntity {
@@ -17,7 +24,7 @@ export class User extends BaseEntity {
   password: string;
 
   @Column({ enum: UserRole, default: UserRole.BASIC })
-  role: UserRole;
+  role: string;
 
   @Column({ name: 'verified_at', nullable: true })
   verifiedAt: Date;
@@ -33,4 +40,7 @@ export class User extends BaseEntity {
 
   @DeleteDateColumn({ name: 'deleted_at', type: 'timestamp' })
   deletedAt: Date;
+
+  @OneToMany(() => Wallet, (wallet) => wallet.currency)
+  wallets: Wallet[];
 }

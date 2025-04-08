@@ -28,6 +28,7 @@ export class CurrencyService {
 
   async findByCode(code: string): Promise<Currency> {
     const currency = await this.currencyRepository.findByCode(code);
+
     if (!currency) {
       throw new NotFoundException(`Currency with code ${code} not found`);
     }
