@@ -2,14 +2,13 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserRole } from 'src/common/enums';
 import { CommonHelper, OtpHelper, PasswordHelper } from 'src/common/helpers';
-import { UsersService } from '../users/users.service';
 import { MailService } from 'src/common/mail/mail.service';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UsersService,
-    // private readonly mailService: MailService,
     private readonly jwtService: JwtService,
     private readonly mailService: MailService,
   ) {}
@@ -76,19 +75,10 @@ export class AuthService {
       throw new BadRequestException('Invalid credentials');
     }
 
-    const payload = { sub: user.id, email: user.email };
+    const payload = { sub: user.id, email: user.email, role: user.role };
 
     const token = this.jwtService.sign(payload);
 
     return { token };
-  }
-
-  private async sendEmail(
-    to: string,
-    subject: string,
-    text: string,
-  ): Promise<void> {
-    console.log(`Sending email to ${to}: ${subject} - ${text}`);
-    // Replace with actual email service implementation (e.g., Nodemailer)
   }
 }
