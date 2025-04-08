@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class Users1744083658006 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -18,9 +18,11 @@ export class Users1744083658006 implements MigrationInterface {
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (id)
         ) ENGINE = InnoDB;
-        `
+        `,
     );
   }
 
-  public async down(queryRunner: QueryRunner): Promise<void> {}
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.dropTable('users');
+  }
 }

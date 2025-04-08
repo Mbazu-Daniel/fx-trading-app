@@ -1,4 +1,4 @@
-import { User } from "../database/entities";
+import { User } from '../database/entities';
 
 export default class OtpHelper {
   static generate(): { otpCode: string; otpExpiresAt: Date } {
@@ -13,7 +13,7 @@ export default class OtpHelper {
     if (!user.otpCode || !user.otpExpiresAt) return false;
 
     const now = new Date();
-    
+
     return user.otpCode === providedOtp && now < user.otpExpiresAt;
   }
 }

@@ -1,15 +1,17 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
-import { UserRole } from "src/common/enums";
-import { CommonHelper, OtpHelper, PasswordHelper } from "src/common/helpers";
-import { UsersService } from "../users/users.service";
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { UserRole } from 'src/common/enums';
+import { CommonHelper, OtpHelper, PasswordHelper } from 'src/common/helpers';
+import { UsersService } from '../users/users.service';
+import { MailService } from 'src/common/mail/mail.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UsersService,
     // private readonly mailService: MailService,
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
+    private readonly mailService: MailService,
   ) {}
 
   async register(email: string, password: string): Promise<boolean> {
@@ -21,7 +23,7 @@ export class AuthService {
     ]);
 
     if (emailExist) {
-      throw new BadRequestException("Email already exists");
+      throw new BadRequestException('Email already exists');
     }
 
     const { otpCode, otpExpiresAt } = OtpHelper.generate();
@@ -34,11 +36,9 @@ export class AuthService {
       otpExpiresAt,
     });
 
-    await this.sendEmail(
-      email,
-      "Verify Your Email",
-      `Your OTP is ${otpCode}. It expires in 10 minutes.`
-    );
+    const template = `<p>Welcome! Please verify your account using the OTP ${otpCode} sent to your email. It expires in 10 minutes.</p>`;
+
+    await this.mailService.sendEmail(email, 'Verify Account', template);
 
     return !!newUser.email;
   }
@@ -47,7 +47,7 @@ export class AuthService {
     const user = await this.userService.findByEmail(email);
 
     if (!user || user.otpCode !== otp || user.otpExpiresAt < new Date()) {
-      throw new BadRequestException("Invalid or expired OTP");
+      throw new BadRequestException('Invalid or expired OTP');
     }
 
     await this.userService.update(user.id, {
@@ -64,16 +64,16 @@ export class AuthService {
 
     if (!user || !user.verifiedAt) {
       throw new BadRequestException(
-        "Invalid credentials or email not verified"
+        'Invalid credentials or email not verified',
       );
     }
 
     const isPasswordValid = await PasswordHelper.verifyPassword(
       user.password,
-      password
+      password,
     );
     if (!isPasswordValid) {
-      throw new BadRequestException("Invalid credentials");
+      throw new BadRequestException('Invalid credentials');
     }
 
     const payload = { sub: user.id, email: user.email };
@@ -86,7 +86,7 @@ export class AuthService {
   private async sendEmail(
     to: string,
     subject: string,
-    text: string
+    text: string,
   ): Promise<void> {
     console.log(`Sending email to ${to}: ${subject} - ${text}`);
     // Replace with actual email service implementation (e.g., Nodemailer)

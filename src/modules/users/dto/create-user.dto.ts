@@ -4,9 +4,9 @@ import {
   IsEnum,
   IsNotEmpty,
   IsOptional,
-  IsString
-} from "class-validator";
-import { UserRole } from "src/common/enums";
+  IsString,
+} from 'class-validator';
+import { UserRole } from 'src/common/enums';
 
 export class CreateUserDto {
   @IsOptional()
@@ -39,4 +39,3 @@ export class CreateUserDto {
   @IsDateString()
   otpExpiresAt?: Date;
 }
-

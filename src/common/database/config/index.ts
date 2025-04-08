@@ -1,13 +1,13 @@
-import { ENVIRONMENT } from "src/common/config";
-import { DataSource, DataSourceOptions } from "typeorm";
-import { SnakeNamingStrategy } from "typeorm-naming-strategies";
-import { User } from "../entities";
-import { Users1744083658006 } from "../migrations";
+import { ENVIRONMENT } from 'src/common/config';
+import { DataSource, DataSourceOptions } from 'typeorm';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import { User } from '../entities';
+import { Users1744083658006 } from '../migrations';
 
-const isDev = ENVIRONMENT.APP.NODE_ENV === "development";
+const isDev = ENVIRONMENT.APP.NODE_ENV === 'development';
 
 export const dataSourceOptions: DataSourceOptions = {
-  type: "mysql",
+  type: 'mysql',
   host: ENVIRONMENT.DB.HOST,
   port: ENVIRONMENT.DB.PORT,
   username: ENVIRONMENT.DB.USERNAME,
@@ -18,7 +18,7 @@ export const dataSourceOptions: DataSourceOptions = {
   migrations: [Users1744083658006],
   logging: isDev,
   migrationsRun: true,
-  migrationsTransactionMode: "all",
+  migrationsTransactionMode: 'all',
   namingStrategy: new SnakeNamingStrategy(),
 };
 

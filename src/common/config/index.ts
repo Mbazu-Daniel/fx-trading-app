@@ -1,4 +1,4 @@
-import * as dotenv from "dotenv";
+import * as dotenv from 'dotenv';
 dotenv.config();
 
 export interface IEnvironment {
@@ -20,25 +20,40 @@ export interface IEnvironment {
     ACCESS_SECRET: string;
     ACCESS_EXPIRES_IN: string;
   };
+
+  MAILER: {
+    HOST: string;
+    PORT: string;
+    EMAIL: string;
+    USERNAME: string;
+    PASSWORD: string;
+  };
 }
 
 export const ENVIRONMENT: IEnvironment = {
   APP: {
-    TITLE: process.env.APP_TITLE || "TeamLyf",
-    NODE_ENV: process.env.NODE_ENV || "development",
+    TITLE: process.env.APP_TITLE || 'TeamLyf',
+    NODE_ENV: process.env.NODE_ENV || 'development',
     PORT: process.env.PORT || process.env.APP_PORT || 5000,
   },
 
   DB: {
-    HOST: process.env.DB_HOST || "localhost",
-    NAME: process.env.DB_NAME || "nkata-studio",
+    HOST: process.env.DB_HOST || 'localhost',
+    NAME: process.env.DB_NAME || 'nkata-studio',
     PORT: Number(process.env.DB_PORT) || 3306,
-    USERNAME: process.env.DB_USERNAME || "root",
-    PASSWORD: process.env.DB_PASSWORD || "Delta1force",
+    USERNAME: process.env.DB_USERNAME || 'root',
+    PASSWORD: process.env.DB_PASSWORD || 'Delta1force',
   },
 
   JWT: {
     ACCESS_SECRET: process.env.ACCESS_SECRET,
     ACCESS_EXPIRES_IN: process.env.ACCESS_EXPIRES_IN,
+  },
+  MAILER: {
+    HOST: process.env.SMTP_HOST,
+    PORT: process.env.SMTP_PORT,
+    EMAIL: process.env.SMTP_EMAIL,
+    USERNAME: process.env.SMTP_USERNAME,
+    PASSWORD: process.env.SMTP_PASSWORD,
   },
 };

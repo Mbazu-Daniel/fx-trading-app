@@ -5,7 +5,10 @@ import { IBaseRepository } from '../interfaces/base.repository.interface';
 export abstract class BaseRepository<T> implements IBaseRepository<T> {
   constructor(private readonly repository: Repository<T>) {}
 
-  async findAll(includeDeleted: boolean = false, relations: string[] = []): Promise<T[]> {
+  async findAll(
+    includeDeleted: boolean = false,
+    relations: string[] = [],
+  ): Promise<T[]> {
     return this.repository.find({
       withDeleted: includeDeleted,
       relations,
@@ -64,7 +67,9 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
   async restore(id: string): Promise<void> {
     const result = await this.repository.restore(id);
     if (result.affected === 0) {
-      throw new NotFoundException(`Entity with id ${id} not found or is not soft deleted`);
+      throw new NotFoundException(
+        `Entity with id ${id} not found or is not soft deleted`,
+      );
     }
   }
 }

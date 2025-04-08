@@ -1,4 +1,4 @@
-import * as argon2 from "argon2";
+import * as argon2 from 'argon2';
 
 export default class PasswordHelper {
   static async hashPassword(password: string): Promise<string> {
@@ -7,7 +7,7 @@ export default class PasswordHelper {
 
   static async verifyPassword(
     password: string,
-    plainPassword: string
+    plainPassword: string,
   ): Promise<boolean> {
     return argon2.verify(password, plainPassword);
   }
