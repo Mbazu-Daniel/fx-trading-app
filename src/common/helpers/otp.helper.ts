@@ -10,10 +10,16 @@ export default class OtpHelper {
   }
 
   static verify(user: User, providedOtp: string): boolean {
-    if (!user.otpCode || !user.otpExpiresAt) return false;
+    if (!user.otpCode || !user.otpExpiresAt) {
+      return false;
+    }
 
     const now = new Date();
 
     return user.otpCode === providedOtp && now < user.otpExpiresAt;
+  }
+
+  static isOtpValid(otpExpiry: Date): boolean {
+    return new Date() < otpExpiry;
   }
 }

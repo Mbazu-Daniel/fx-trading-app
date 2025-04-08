@@ -1,7 +1,7 @@
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-export function SwaggerSetup(app: any) {
+export function SwaggerSetup(app: NestExpressApplication) {
   const config = new DocumentBuilder()
     .setTitle('FX Trading Studio')
     .setDescription('FX Trading Studio API Documentation')
