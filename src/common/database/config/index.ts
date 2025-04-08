@@ -1,9 +1,10 @@
 import { ENVIRONMENT } from 'src/common/config';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
-import { Currency, Transaction, User, Wallet } from '../entities';
+import { Currency, Trade, Transaction, User, Wallet } from '../entities';
 import {
   Currency1744125706250,
+  Trades1744142273976,
   Transactions1744131512960,
   Users1744083658006,
   Wallets1744126763060,
@@ -19,12 +20,13 @@ export const dataSourceOptions: DataSourceOptions = {
   password: ENVIRONMENT.DB.PASSWORD,
   database: ENVIRONMENT.DB.NAME,
   synchronize: false,
-  entities: [User, Currency, Wallet, Transaction],
+  entities: [User, Currency, Wallet, Transaction, Trade],
   migrations: [
     Users1744083658006,
     Currency1744125706250,
     Wallets1744126763060,
     Transactions1744131512960,
+    Trades1744142273976,
   ],
   logging: isDev,
   migrationsRun: true,

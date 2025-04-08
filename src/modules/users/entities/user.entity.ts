@@ -1,7 +1,6 @@
-import { Transaction } from 'src/common/database/entities';
+import { Trade, Transaction, Wallet } from 'src/common/database/entities';
 import { BaseEntity } from 'src/common/database/entities/base.entity';
 import { UserRole } from 'src/common/enums';
-import { Wallet } from 'src/modules/wallets/entities/wallet.entity';
 import {
   Column,
   DeleteDateColumn,
@@ -47,4 +46,7 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Transaction, (transaction) => transaction.user)
   transactions: Transaction[];
+
+  @OneToMany(() => Trade, (trade) => trade.user)
+  trades: Trade[];
 }

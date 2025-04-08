@@ -7,6 +7,7 @@ import { Wallet } from './entities/wallet.entity';
 import { WalletRepository } from './wallet.repository';
 import { WalletsController } from './wallets.controller';
 import { WalletsService } from './wallets.service';
+import { TradesModule } from '../trades/trades.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { WalletsService } from './wallets.service';
     UsersModule,
     CurrencyModule,
     forwardRef(() => TransactionsModule),
+    forwardRef(() => TradesModule),
   ],
   controllers: [WalletsController],
   providers: [WalletsService, WalletRepository],
