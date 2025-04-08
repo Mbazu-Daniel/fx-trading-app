@@ -1,3 +1,4 @@
+import { Transaction } from 'src/common/database/entities';
 import { BaseEntity } from 'src/common/database/entities/base.entity';
 import { UserRole } from 'src/common/enums';
 import { Wallet } from 'src/modules/wallets/entities/wallet.entity';
@@ -43,4 +44,7 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Wallet, (wallet) => wallet.currency)
   wallets: Wallet[];
+
+  @OneToMany(() => Transaction, (transaction) => transaction.user)
+  transactions: Transaction[];
 }

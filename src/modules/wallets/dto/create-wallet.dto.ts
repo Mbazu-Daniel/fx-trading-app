@@ -1,11 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import {
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsUUID,
-  Min
-} from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsUUID, Min } from 'class-validator';
 
 export class CreateWalletDto {
   @ApiProperty({ description: 'Currency ID for the wallet', format: 'uuid' })

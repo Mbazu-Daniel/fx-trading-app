@@ -1,6 +1,12 @@
 import { BaseEntity } from 'src/common/database/entities/base.entity';
 import { Wallet } from 'src/modules/wallets/entities/wallet.entity';
-import { Column, Entity, OneToMany } from 'typeorm';
+import {
+  Column,
+  DeleteDateColumn,
+  Entity,
+  OneToMany,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity('currencies')
 export class Currency extends BaseEntity {
@@ -13,8 +19,11 @@ export class Currency extends BaseEntity {
   @Column({ name: 'is_active', default: true })
   isActive: boolean;
 
-  @Column({ name: 'updated_at', type: 'timestamp' })
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
   updatedAt: Date;
+
+  @DeleteDateColumn({ name: 'deleted_at', type: 'timestamp' })
+  deletedAt: Date;
 
   @OneToMany(() => Wallet, (wallet) => wallet.currency)
   wallets: Wallet[];

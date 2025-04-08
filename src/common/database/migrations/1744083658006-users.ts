@@ -13,9 +13,9 @@ export class Users1744083658006 implements MigrationInterface {
         verified_at TIMESTAMP NULL,
         otp_code VARCHAR(10) NULL,
         otp_expires_at TIMESTAMP NULL,
-        deleted_at TIMESTAMP NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        deleted_at TIMESTAMP NULL,
         PRIMARY KEY (id)
         ) ENGINE = InnoDB;
         `,

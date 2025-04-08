@@ -10,6 +10,7 @@ export class Currency1744125706250 implements MigrationInterface {
         is_active BOOLEAN NOT NULL DEFAULT true,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        deleted_at timestamp NULL,
         PRIMARY KEY (id)
     ) ENGINE=InnoDB;`,
     );
