@@ -1,6 +1,6 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { ENVIRONMENT } from '../config';
 import { MailerService } from '@nestjs-modules/mailer';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { ENVIRONMENT } from '../../common/config';
 
 @Injectable()
 export class MailService {

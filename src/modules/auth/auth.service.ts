@@ -7,7 +7,7 @@ import {
   OtpHelper,
   PasswordHelper,
 } from 'src/common/helpers';
-import { MailService } from 'src/common/mail/mail.service';
+import { MailService } from 'src/modules/mail/mail.service';
 import { CurrencyService } from '../currency/currency.service';
 import { UsersService } from '../users/users.service';
 import { WalletsService } from '../wallets/wallets.service';
