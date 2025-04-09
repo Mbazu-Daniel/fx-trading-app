@@ -46,8 +46,8 @@ export class AuthService {
       });
 
       const [ngn, usd] = await Promise.all([
-        this.currencyService.findByCode('NGN'),
-        this.currencyService.findByCode('USD'),
+        this.currencyService.getCurrencyByCode('NGN'),
+        this.currencyService.getCurrencyByCode('USD'),
       ]);
 
       if (ngn) {

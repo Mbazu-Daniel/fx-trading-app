@@ -26,6 +26,11 @@ export interface IEnvironment {
     USERNAME: string;
     PASSWORD: string;
   };
+
+  EXCHANGE_RATE: {
+    API_KEY: string;
+    BASE_URL: string;
+  };
 }
 
 export const ENVIRONMENT: IEnvironment = {
@@ -51,5 +56,9 @@ export const ENVIRONMENT: IEnvironment = {
     EMAIL: process.env.SMTP_EMAIL,
     USERNAME: process.env.SMTP_USERNAME,
     PASSWORD: process.env.SMTP_PASSWORD,
+  },
+  EXCHANGE_RATE: {
+    API_KEY: process.env.EXCHANGE_RATE_API_KEY,
+    BASE_URL: process.env.EXCHANGE_RATE_BASE_URL,
   },
 };

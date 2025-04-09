@@ -1,4 +1,4 @@
-import { Module, OnModuleInit } from '@nestjs/common';
+import { Logger, Module, OnModuleInit } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
@@ -10,8 +10,10 @@ import { DbTransactionHelper } from './common/helpers';
 import { AuthModule } from './modules/auth/auth.module';
 import { CurrencyModule } from './modules/currency/currency.module';
 import { CurrencyService } from './modules/currency/currency.service';
+import { ExchangeRateModule } from './modules/exchange-rate/exchange-rate.module';
 import { UsersModule } from './modules/users/users.module';
 import { WalletsModule } from './modules/wallets/wallets.module';
+import { TradesModule } from './modules/trades/trades.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { WalletsModule } from './modules/wallets/wallets.module';
     AuthModule,
     CurrencyModule,
     WalletsModule,
+    TradesModule,
+    ExchangeRateModule,
   ],
   controllers: [AppController],
   providers: [
@@ -35,6 +39,7 @@ import { WalletsModule } from './modules/wallets/wallets.module';
   ],
 })
 export class AppModule implements OnModuleInit {
+  private readonly logger = new Logger(CurrencyService.name);
   constructor(
     private readonly dataSource: DataSource,
     private readonly currencyService: CurrencyService,
@@ -44,24 +49,20 @@ export class AppModule implements OnModuleInit {
 
     const currencies = await this.currencyService.findAll();
 
-    // Check if NGN currency exists, if not, create it
-    if (!currencies.some((currency) => currency.code === 'NGN')) {
-      await this.currencyService.create({
-        code: 'NGN',
-        name: 'Nigerian Naira',
-        isActive: true,
-      });
-      console.log('NGN currency created');
-    }
+    const requiredCurrencies = [
+      { code: 'NGN', name: 'Nigerian Naira' },
+      { code: 'USD', name: 'United States Dollar' },
+    ];
 
-    // Check if USD currency exists, if not, create it
-    if (!currencies.some((currency) => currency.code === 'USD')) {
-      await this.currencyService.create({
-        code: 'USD',
-        name: 'United States Dollar',
-        isActive: true,
-      });
-      console.log('USD currency created');
+    for (const { code, name } of requiredCurrencies) {
+      if (!currencies.some((currency) => currency.code === code)) {
+        await this.currencyService.createCurrency({
+          code,
+          name,
+          isActive: true,
+        });
+        this.logger.log(`${code} currency created`);
+      }
     }
   }
 }

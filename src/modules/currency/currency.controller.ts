@@ -20,12 +20,12 @@ export class CurrencyController {
 
   @Get()
   async getAllActiveCurrencies() {
-    return this.currencyService.findActiveCurrencies();
+    return this.currencyService.getActiveCurrencies();
   }
 
   @Get(':currencyId')
   async getCurrencyById(@Param('currencyId') currencyId: string) {
-    return this.currencyService.findById(currencyId);
+    return this.currencyService.getCurrencyById(currencyId);
   }
 
   @Post()
@@ -33,7 +33,7 @@ export class CurrencyController {
   @Roles(UserRole.ADMIN)
   @Roles(UserRole.SUPER_ADMIN)
   async createCurrency(@Body() createCurrencyDto: CreateCurrencyDto) {
-    return this.currencyService.create(createCurrencyDto);
+    return this.currencyService.createCurrency(createCurrencyDto);
   }
 
   @Put(':currencyId')
@@ -44,7 +44,7 @@ export class CurrencyController {
     @Param('currencyId') currencyId: string,
     @Body() updateCurrencyDto: UpdateCurrencyDto,
   ) {
-    return this.currencyService.update(currencyId, updateCurrencyDto);
+    return this.currencyService.updateCurrency(currencyId, updateCurrencyDto);
   }
 
   @Put(':currencyId/toggle-active')

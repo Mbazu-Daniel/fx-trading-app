@@ -16,7 +16,7 @@ export class CurrencyService {
     return this.currencyRepository.findAll();
   }
 
-  async findById(currencyId: string): Promise<Currency> {
+  async getCurrencyById(currencyId: string): Promise<Currency> {
     const currency = await this.currencyRepository.findById(currencyId);
     if (!currency) {
       throw new NotFoundException(
@@ -26,7 +26,7 @@ export class CurrencyService {
     return currency;
   }
 
-  async findByCode(code: string): Promise<Currency> {
+  async getCurrencyByCode(code: string): Promise<Currency> {
     const currency = await this.currencyRepository.findByCode(code);
 
     if (!currency) {
@@ -35,11 +35,13 @@ export class CurrencyService {
     return currency;
   }
 
-  async findActiveCurrencies(): Promise<Currency[]> {
+  async getActiveCurrencies(): Promise<Currency[]> {
     return this.currencyRepository.findActiveCurrencies();
   }
 
-  async create(createCurrencyDto: CreateCurrencyDto): Promise<Currency> {
+  async createCurrency(
+    createCurrencyDto: CreateCurrencyDto,
+  ): Promise<Currency> {
     const existingCurrency = await this.currencyRepository.findByCode(
       createCurrencyDto.code,
     );
@@ -52,11 +54,11 @@ export class CurrencyService {
     return this.currencyRepository.create(createCurrencyDto);
   }
 
-  async update(
+  async updateCurrency(
     currencyId: string,
     updateCurrencyDto: UpdateCurrencyDto,
   ): Promise<Currency> {
-    const currency = await this.findById(currencyId);
+    const currency = await this.getCurrencyById(currencyId);
 
     if (updateCurrencyDto.code && updateCurrencyDto.code !== currency.code) {
       const existingCurrency = await this.currencyRepository.findByCode(
@@ -73,13 +75,13 @@ export class CurrencyService {
   }
 
   async toggleActive(currencyId: string): Promise<Currency> {
-    const currency = await this.findById(currencyId);
+    const currency = await this.getCurrencyById(currencyId);
     return this.currencyRepository.update(currencyId, {
       isActive: !currency.isActive,
     });
   }
 
   async delete(currencyId: string): Promise<void> {
-    await this.currencyRepository.delete(currencyId);
+    await this.currencyRepository.softDelete(currencyId);
   }
 }

@@ -1,16 +1,16 @@
 // src/services/trade.service.ts
 import {
+  BadRequestException,
   Injectable,
   NotFoundException,
-  BadRequestException,
 } from '@nestjs/common';
 import { TradeStatus, TransactionType } from 'src/common/enums';
 import { CommonHelper } from 'src/common/helpers';
 import { CurrencyService } from '../currency/currency.service';
-import { CreateTradeDto } from './dto/create-trade.dto';
-import { Trade } from './entities/trade.entity';
 import { TransactionsService } from '../transactions/transactions.service';
 import { WalletsService } from '../wallets/wallets.service';
+import { CreateTradeDto } from './dto/create-trade.dto';
+import { Trade } from './entities/trade.entity';
 import { TradeRepository } from './trade.repository';
 
 @Injectable()
@@ -53,12 +53,15 @@ export class TradesService {
     createTradeDto: CreateTradeDto,
   ): Promise<Trade> {
     // Validate currencies
-    const fromCurrency = await this.currencyService.findById(
-      createTradeDto.fromCurrencyId,
-    );
-    const toCurrency = await this.currencyService.findById(
-      createTradeDto.toCurrencyId,
-    );
+    const [fromCurrency, toCurrency] = await Promise.all([
+      this.currencyService.getCurrencyById(createTradeDto.fromCurrencyId),
+      this.currencyService.getCurrencyById(createTradeDto.toCurrencyId),
+    ]);
+
+    // Check if currencies are valid and active
+    if (!fromCurrency || !toCurrency) {
+      throw new BadRequestException('Invalid currency IDs');
+    }
 
     if (!fromCurrency.isActive || !toCurrency.isActive) {
       throw new BadRequestException('One or both currencies are not active');

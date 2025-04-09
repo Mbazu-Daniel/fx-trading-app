@@ -1,7 +1,9 @@
+import { Logger } from '@nestjs/common';
 import { DataSource, QueryRunner } from 'typeorm';
 
 export class DbTransactionHelper {
   private static dataSource: DataSource;
+  private static readonly logger = new Logger(DbTransactionHelper.name);
 
   static initialize(dataSource: DataSource): void {
     if (!dataSource) {
@@ -10,7 +12,9 @@ export class DbTransactionHelper {
       );
     }
     DbTransactionHelper.dataSource = dataSource;
-    console.log('DbTransactionHelper: DataSource initialized successfully!');
+    this.logger.log(
+      'DbTransactionHelper: DataSource initialized successfully!',
+    );
   }
 
   static async execute(
@@ -20,8 +24,8 @@ export class DbTransactionHelper {
       !DbTransactionHelper.dataSource ||
       !DbTransactionHelper.dataSource.isInitialized
     ) {
-      console.error('DbTransactionHelper: DataSource is not initialized!');
-      throw new Error(
+      this.logger.error('DbTransactionHelper: DataSource is not initialized!');
+      throw new ReferenceError(
         'DataSource not set. Please call initialize method to set the data source!',
       );
     }
