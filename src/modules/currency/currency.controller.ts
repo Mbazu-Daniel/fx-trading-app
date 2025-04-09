@@ -13,8 +13,10 @@ import { RoleGuard, Roles } from 'src/common/guards';
 import { CurrencyService } from './currency.service';
 import { CreateCurrencyDto } from './dto/create-currency.dto';
 import { UpdateCurrencyDto } from './dto/update-currency.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('currency')
+@ApiBearerAuth('access-token')
 export class CurrencyController {
   constructor(private readonly currencyService: CurrencyService) {}
 

@@ -9,9 +9,11 @@ import { ConvertCurrencyDto } from './dto/convert-currency.dto';
 import { FundWalletDto } from './dto/fund-wallet.dto';
 import { TransferFundsDto } from './dto/transfer-funds.dto';
 import { WalletsService } from './wallets.service';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('wallet')
 @UseGuards(JwtAuthGuard)
+@ApiBearerAuth('access-token')
 export class WalletsController {
   constructor(
     private readonly walletService: WalletsService,

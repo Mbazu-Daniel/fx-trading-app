@@ -9,9 +9,11 @@ import { CurrentUser } from 'src/common/decorators';
 import { JwtAuthGuard } from 'src/common/guards';
 import { IAuthenticatedUserRequest } from 'src/common/interfaces';
 import { TransactionsService } from './transactions.service';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('transactions')
 @UseGuards(JwtAuthGuard)
+@ApiBearerAuth('access-token')
 export class TransactionsController {
   constructor(private readonly transactionService: TransactionsService) {}
 

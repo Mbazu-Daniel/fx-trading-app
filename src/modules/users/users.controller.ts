@@ -5,9 +5,11 @@ import { JwtAuthGuard, RoleGuard, Roles } from 'src/common/guards';
 import { IAuthenticatedUserRequest } from 'src/common/interfaces';
 import { IUserResponseDto, UserMapper } from './dto/user-response.dto';
 import { UsersService } from './users.service';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)
+@ApiBearerAuth('access-token')
 export class UsersController {
   constructor(private usersService: UsersService) {}
 

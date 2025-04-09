@@ -6,9 +6,16 @@ export function SwaggerSetup(app: NestExpressApplication) {
     .setTitle('FX Trading Studio')
     .setDescription('FX Trading Studio API Documentation')
     .setVersion('1.0')
-    .addTag('Auth', 'Collection of auth endpoints')
-    .addTag('Users', 'Collection of user related endpoints')
-    .addBearerAuth()
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'Authorization',
+        in: 'header',
+      },
+      'access-token',
+    )
     .build();
 
   const document = () => SwaggerModule.createDocument(app, config);

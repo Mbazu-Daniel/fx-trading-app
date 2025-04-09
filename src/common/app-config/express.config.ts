@@ -10,6 +10,10 @@ import * as morgan from 'morgan';
 export const ExpressSetup = (app: NestExpressApplication) => {
   app.use(express.json({ limit: '10kb' }));
   app.use(express.urlencoded({ limit: '20mb', extended: true }));
+  app.enableCors({
+    origin: true,
+    credentials: true,
+  });
   app.use(cookieParser());
   app.use(compression());
 
